@@ -291,18 +291,42 @@ window.livePreviewHideFullscreen = false;
           }
         }
 
-        if (
-          this.redactorConfig.plugins.indexOf('fullscreen') !== -1 &&
-          typeof Craft.livePreview != 'undefined' &&
-          window.livePreviewHideFullscreen === false
-        ) {
-          window.livePreviewHideFullscreen = true;
-          Craft.livePreview.on('beforeEnter', function (ev) {
-            $('a.re-button.re-fullscreen').addClass('hidden');
-          });
-          Craft.livePreview.on('beforeExit', function (ev) {
-            $('a.re-button.re-fullscreen').removeClass('hidden');
-          });
+        if (this.redactorConfig.plugins.includes('fullscreen')) {
+          if (
+            Craft.livePreview !== undefined &&
+            window.livePreviewHideFullscreen === false
+          ) {
+            window.livePreviewHideFullscreen = true;
+            Craft.livePreview.on('beforeEnter', function (ev) {
+              $('a.re-button.re-fullscreen').addClass('hidden');
+            });
+            Craft.livePreview.on('beforeExit', function (ev) {
+              $('a.re-button.re-fullscreen').removeClass('hidden');
+            });
+          }
+
+          setTimeout(() => {
+            const elementEditor = this.$textarea
+              .closest('form')
+              .data('elementEditor');
+            if (
+              elementEditor &&
+              elementEditor.settings.reloadOnBroadcastSave !== undefined
+            ) {
+              const initialValue = elementEditor.settings.reloadOnBroadcastSave;
+              const fullscreen = this.redactor.plugin.fullscreen;
+              const open = fullscreen.open;
+              const close = fullscreen.close;
+              fullscreen.open = function () {
+                elementEditor.settings.reloadOnBroadcastSave = false;
+                open.apply(this);
+              };
+              fullscreen.close = function () {
+                elementEditor.settings.reloadOnBroadcastSave = initialValue;
+                close.apply(this);
+              };
+            }
+          }, 100);
         }
 
         this.trigger('afterInitializeRedactor', {

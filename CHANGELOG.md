@@ -1,5 +1,9 @@
 # Release Notes for Redactor for Craft CMS
 
+## Unreleased
+
+- Redactor fields now prevent element edit pages from automatically reloading when in fullscreen mode (requires Craft CMS 5.2+). ([craftcms/cms#14814](https://github.com/craftcms/cms/issues/14814))
+
 ## 4.0.0 - 2024-03-21
 
 - Redactor now requires Craft CMS 5.0.0-beta.1 or later.
