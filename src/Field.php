@@ -9,6 +9,8 @@ namespace craft\redactor;
 
 use Craft;
 use craft\base\ElementInterface;
+use craft\base\FieldInterface;
+use craft\base\MergeableFieldInterface;
 use craft\elements\Asset;
 use craft\elements\Category;
 use craft\elements\Entry;
@@ -36,7 +38,7 @@ use yii\base\InvalidConfigException;
  * @author Pixel & Tonic, Inc. <support@pixelandtonic.com>
  * @since 3.0
  */
-class Field extends HtmlField
+class Field extends HtmlField implements MergeableFieldInterface
 {
     /**
      * @event RegisterPluginPathsEvent The event that is triggered when registering paths that contain Redactor plugins.
@@ -357,6 +359,32 @@ class Field extends HtmlField
             },
         ];
         return $rules;
+    }
+
+    /**
+     * @innheritdoc
+     */
+    public function canMergeFrom(FieldInterface $outgoingField, ?string &$reason): bool
+    {
+        if (!$outgoingField instanceof self) {
+            $reason = 'Redactor fields can only be merged from other Redactor fields.';
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @innheritdoc
+     */
+    public function canMergeInto(FieldInterface $persistingField, ?string &$reason): bool
+    {
+        if (!$persistingField instanceof HtmlField) {
+            $reason = 'Redactor fields can only be merged into other HTML-based fields.';
+            return false;
+        }
+
+        return true;
     }
 
     /**

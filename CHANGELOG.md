@@ -1,5 +1,11 @@
 # Release Notes for Redactor for Craft CMS
 
+## 4.2.0 - 2024-09-03
+
+- Redactor now requires Craft CMS 5.3+.
+- Redactor fields can now be merged together via the `fields/merge` and `fields/auto-merge` commands.
+- Redactor fields can now be merged into CKEditor fields via the `fields/merge` command.
+
 ## 4.1.0 - 2024-06-12
 
 - Redactor fields now prevent element edit pages from automatically reloading when in fullscreen mode (requires Craft CMS 5.2+). ([craftcms/cms#14814](https://github.com/craftcms/cms/issues/14814))
